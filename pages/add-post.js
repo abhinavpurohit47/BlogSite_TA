@@ -58,13 +58,13 @@ export default function AddPost() {
                     ) : null}
                     {message ? (
                         <div className="block">
-                            <h3 className="bg-green-600">{message}</h3>
+                            <h3 className="bg-green-600 rounded-sm">{message}</h3>
                         </div>
                     ) : null}
                     <div className="block w-full p-3">
                         <label className="block text-2xl">Title</label>
                         <input
-                        className="w-full p-1 ml-4 text-white bg-transparent border-2 rounded-lg outline-none hover:bg-black hover:to-white"
+                        className="w-full p-1 ml-4 text-black bg-transparent border-2 rounded-lg outline-none "
                             type="text"
                             name="title"
                             onChange={(e) => setTitle(e.target.value)}
@@ -75,7 +75,7 @@ export default function AddPost() {
                     <div className="flex flex-col  w-full p-3">
                         <label className="block text-2xl">Content</label>
                         <textarea
-                        className="w-full p-1 ml-4 text-white bg-transparent border-2 rounded-lg outline-none hover:bg-black hover:to-bg-gray-500"
+                        className="w-full p-1 ml-4 text-black bg-transparent border-2 rounded-lg outline-none "
                             name="content"
                             onChange={(e) => setContent(e.target.value)}
                             value={content}
