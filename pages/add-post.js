@@ -18,6 +18,32 @@ export default function AddPost() {
 
         // fields check
         if (!title || !content) return setError('All fields are required');
+         // post structure
+         let post = {
+            title,
+            content,
+            published: false,
+            createdAt: new Date().toISOString(),
+        };
+        // save the post
+        let response = await fetch('/api/posts', {
+            method: 'POST',
+            body: JSON.stringify(post),
+        });
+
+        // get the data
+        let data = await response.json();
+
+        if (data.success) {
+            // reset the fields
+            setTitle('');
+            setContent('');
+            // set the message
+            return setMessage(data.message);
+        } else {
+            // set the error
+            return setError(data.message);
+        }
     };
 
     return (
@@ -36,18 +62,20 @@ export default function AddPost() {
                         </div>
                     ) : null}
                     <div className="block w-full p-3">
-                        <label>Title</label>
+                        <label className="block text-2xl">Title</label>
                         <input
+                        className="w-full p-1 ml-4 text-white bg-transparent border-2 rounded-lg outline-none hover:bg-black hover:to-white"
                             type="text"
                             name="title"
                             onChange={(e) => setTitle(e.target.value)}
                             value={title}
-                            placeholder="title"
+                            placeholder="Title"
                         />
                     </div>
-                    <div className="block w-full p-3">
-                        <label>Content</label>
+                    <div className="flex flex-col  w-full p-3">
+                        <label className="block text-2xl">Content</label>
                         <textarea
+                        className="w-full p-1 ml-4 text-white bg-transparent border-2 rounded-lg outline-none hover:bg-black hover:to-bg-gray-500"
                             name="content"
                             onChange={(e) => setContent(e.target.value)}
                             value={content}
@@ -55,7 +83,7 @@ export default function AddPost() {
                         />
                     </div>
                     <div className="block w-full p-3">
-                        <button type="submit">Add post</button>
+                        <button type="submit" className="justify-center block float-right p-2 text-black bg-transparent border-2 outline-none cursor-pointer rounded-xl text-bold">Add post</button>
                     </div>
                 </form>
             </div>
