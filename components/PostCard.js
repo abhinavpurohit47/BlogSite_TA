@@ -1,22 +1,71 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function PostCard({ post }) {
-    return  (
-        <div className="flex">
+    const [publishing, setPublishing] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const router = useRouter();
+
+    // Publish post
+    const publishPost = async (postId) => {
+        // change publishing state
+        setPublishing(true);
+
+        try {
+            // Update post
+            await fetch('/api/posts', {
+                method: 'PUT',
+                body: postId,
+            });
+
+            // reset the publishing state
+            setPublishing(false);
+
+            // reload the page
+            return router.push(router.asPath);
+        } catch (error) {
+            // Stop publishing state
+            return setPublishing(false);
+        }
+    };
+    // Delete post
+    const deletePost = async (postId) => {
+        //change deleting state
+        setDeleting(true);
+
+        try {
+            // Delete post
+            await fetch('/api/posts', {
+                method: 'DELETE',
+                body: postId,
+            });
+
+            // reset the deleting state
+            setDeleting(false);
+
+            // reload the page
+            return router.push(router.asPath);
+        } catch (error) {
+            // stop deleting state
+            return setDeleting(false);
+        }
+    };
+    return (
+        <>
             <li>
                 <h3 className="text-xl font-semibold text-gray-700">{post.title}</h3>
                 <p className="text-xl font-semibold text-gray-700">{post.content}</p>
-                <small className="text-xl font-semibold text-gray-700">{new Date(post.createdAt).toLocaleDateString()}</small>
+                <small  className="text-xl font-semibold text-gray-700">{new Date(post.createdAt).toLocaleDateString()}</small>
                 <br />
-                <button type = "button" className=" border-2 rounded-xl p-0.5 border-gray-600">
-                    {'Publish'}
-                </button>
-                <button type = "button" className=" border-2 rounded-xl m-4 p-0.5 border-gray-600">
-                    {'Delete'}
+                {!post.published ? (
+                    <button type="button"className=" border-2 rounded-xl p-0.5 border-gray-600"  onClick={() => publishPost(post._id)}>
+                        {publishing ? 'Publishing' : 'Publish'}
+                    </button>
+                ) : null}
+                <button type="button" className=" border-2 rounded-xl m-4 p-0.5 border-gray-600" onClick={() => deletePost(post['_id'])}>
+                    {deleting ? 'Deleting' : 'Delete'}
                 </button>
             </li>
-        
-        </div>
-    )
+        </>
+    );
 }
