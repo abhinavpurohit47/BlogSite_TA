@@ -74,6 +74,31 @@ async function updatePost(req, res) {
     }
 }
 
+async function deletePost(req, res) {
+    try {
+        // Connecting to the database
+        let { db } = await connectToDatabase();
+
+        // Deleting the post
+        await db.collection('posts').deleteOne({
+            _id: new ObjectId(req.body),
+        });
+
+        // returning a message
+        return res.json({
+            message: 'Post deleted successfully',
+            success: true,
+        });
+    } catch (error) {
+
+        // returning an error
+        return res.json({
+            message: new Error(error).message,
+            success: false,
+        });
+    }
+}
+
 export default async function handler(req, res) {
     // switch the methods
     switch (req.method) {
